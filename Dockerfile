@@ -5,7 +5,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libwebp-dev libfreetype6-dev libzip-dev libonig-dev libxml2-dev libcurl4-openssl-dev \
     && docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp \
     && docker-php-ext-install -j"$(nproc)" \
-       bcmath curl exif gd mbstring opcache pdo_pgsql pdo_sqlite pgsql xml zip \
+    bcmath curl exif gd mbstring pdo_pgsql pdo_sqlite pgsql xml zip \
     && curl -fsSL https://deb.nodesource.com/setup_22.x | bash - \
     && apt-get install -y --no-install-recommends nodejs \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
@@ -22,7 +22,7 @@ RUN { \
     echo 'upload_max_filesize=8M'; \
     echo 'post_max_size=10M'; \
     echo 'memory_limit=256M'; \
-} > /usr/local/etc/php/conf.d/99-production-performance.ini
+    } > /usr/local/etc/php/conf.d/99-production-performance.ini
 
 RUN { \
     echo '[www]'; \
@@ -34,7 +34,7 @@ RUN { \
     echo 'pm.max_requests = 400'; \
     echo 'clear_env = no'; \
     echo 'catch_workers_output = yes'; \
-} > /usr/local/etc/php-fpm.d/zz-render.conf
+    } > /usr/local/etc/php-fpm.d/zz-render.conf
 
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 WORKDIR /var/www/html
@@ -51,7 +51,7 @@ RUN composer dump-autoload --optimize --classmap-authoritative \
     && npm run build \
     && rm -rf node_modules \
     && mkdir -p storage/framework/sessions storage/framework/views storage/framework/cache/data \
-       storage/framework/cache/locks storage/logs bootstrap/cache \
+    storage/framework/cache/locks storage/logs bootstrap/cache \
     && sed -i 's/\r$//' docker/start.sh \
     && chown -R www-data:www-data storage bootstrap/cache public \
     && chmod -R 775 storage bootstrap/cache \
