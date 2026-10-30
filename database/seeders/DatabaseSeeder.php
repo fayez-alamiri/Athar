@@ -9,157 +9,169 @@ use Illuminate\Database\Seeder;
 class DatabaseSeeder extends Seeder
 {
     /**
-     * Non-destructively seed or update sample readers, quick quotes (with attributed authors),
-     * and book quotes (with their configured public/images/books/*.jfif cover paths).
+     * Seed ATHAR with six Arabic demo publisher accounts and curated quotations.
+     *
+     * This seeder is intentionally non-destructive:
+     * - It uses updateOrCreate() so it can safely be run more than once.
+     * - It never deletes users, quotes, books, authors, likes, or saved quotes.
+     * - It is intended for local/demo databases only; do not run it on production.
      */
     public function run(): void
     {
-        $arabicReader = User::updateOrCreate(
-            ['email' => 'reader@quoteit.local'],
-            [
-                'name' => 'أديب القراءة',
-                'password' => 'password123',
-                'locale' => 'ar',
-            ]
-        );
+        $demoPassword = 'AtharDemo2026!';
 
-        $englishReader = User::updateOrCreate(
-            ['email' => 'editorial@quoteit.local'],
-            [
-                'name' => 'Clara Vance',
-                'password' => 'password123',
-                'locale' => 'en',
-            ]
-        );
+        $accounts = [
+            'adab' => [
+                'name' => 'عاشق الأدب',
+                'email' => 'adab@athar.local',
+            ],
+            'wisdom' => [
+                'name' => 'طالب الحكمة',
+                'email' => 'wisdom@athar.local',
+            ],
+            'night' => [
+                'name' => 'قارئ الليل',
+                'email' => 'nightreader@athar.local',
+            ],
+            'knowledge' => [
+                'name' => 'طالب العلم',
+                'email' => 'student@athar.local',
+            ],
+            'reading' => [
+                'name' => 'نبض القراءة',
+                'email' => 'reading@athar.local',
+            ],
+            'ink' => [
+                'name' => 'حبر العلم',
+                'email' => 'ink@athar.local',
+            ],
+        ];
 
-        // 1. Quick User Quotes (with attributed authors in Arabic and English)
-        Quote::updateOrCreate(
+        $users = [];
+
+        foreach ($accounts as $key => $account) {
+            $users[$key] = User::updateOrCreate(
+                ['email' => $account['email']],
+                [
+                    'name' => $account['name'],
+                    'password' => $demoPassword,
+                    'locale' => 'ar',
+                ]
+            );
+        }
+
+        $quotes = [
+            // Quick quotations — classical Arabic poetry.
             [
-                'user_id' => $arabicReader->id,
+                'publisher' => 'knowledge',
                 'type' => Quote::TYPE_QUICK,
-                'quote_text' => "على قدر أهل العزم تأتي العزائم\nوتأتي على قدر الكرام المكارم",
+                'quote_text' => "شَكَوتُ إِلى وَكِيعٍ سُوءَ حِفظي\nفَأَرشَدَني إِلى تَركِ المَعاصي\nوَأَخبَرَني بِأَنَّ العِلمَ نورٌ\nوَنورُ اللهِ لا يُهدى لِعاصي",
+                'attributed_author' => 'الإمام الشافعي (منسوب إليه)',
+                'book_title' => null,
+                'book_cover_path' => null,
             ],
             [
+                'publisher' => 'adab',
+                'type' => Quote::TYPE_QUICK,
+                'quote_text' => "عَلى قَدرِ أَهلِ العَزمِ تَأتي العَزائِمُ\nوَتَأتي عَلى قَدرِ الكِرامِ المَكارِمُ",
                 'attributed_author' => 'المتنبي',
                 'book_title' => null,
                 'book_cover_path' => null,
-            ]
-        );
-
-        Quote::updateOrCreate(
-            [
-                'user_id' => $englishReader->id,
-                'type' => Quote::TYPE_QUICK,
-                'quote_text' => 'The only true wisdom is in knowing you know nothing.',
             ],
             [
-                'attributed_author' => 'سقراط',
+                'publisher' => 'adab',
+                'type' => Quote::TYPE_QUICK,
+                'quote_text' => "إِذا غامَرتَ في شَرَفٍ مَرومٍ\nفَلا تَقنَعْ بِما دونَ النُّجومِ",
+                'attributed_author' => 'المتنبي',
                 'book_title' => null,
                 'book_cover_path' => null,
-            ]
-        );
-
-        Quote::updateOrCreate(
-            [
-                'user_id' => $arabicReader->id,
-                'type' => Quote::TYPE_QUICK,
-                'quote_text' => 'القراءة تمنحنا حياة أخرى نعيشها فوق حياتنا، وتفتح لنا نوافذ لا تغلقها المسافات.',
             ],
             [
-                'attributed_author' => 'عباس محمود العقاد',
+                'publisher' => 'adab',
+                'type' => Quote::TYPE_QUICK,
+                'quote_text' => "الخَيلُ وَاللَّيلُ وَالبَيداءُ تَعرِفُني\nوَالسَّيفُ وَالرُّمحُ وَالقِرطاسُ وَالقَلَمُ",
+                'attributed_author' => 'المتنبي',
                 'book_title' => null,
                 'book_cover_path' => null,
-            ]
-        );
-
-        Quote::updateOrCreate(
-            [
-                'user_id' => $englishReader->id,
-                'type' => Quote::TYPE_QUICK,
-                'quote_text' => 'Quiet libraries hold the loudest conversations across centuries of human thought.',
             ],
             [
-                'attributed_author' => 'Jorge Luis Borges',
+                'publisher' => 'night',
+                'type' => Quote::TYPE_QUICK,
+                'quote_text' => "ما كُلُّ ما يَتَمَنّى المَرءُ يُدرِكُهُ\nتَجري الرِّياحُ بِما لا تَشتَهي السُّفُنُ",
+                'attributed_author' => 'المتنبي',
                 'book_title' => null,
                 'book_cover_path' => null,
-            ]
-        );
-
-        // 2. Book Quotes with configured public/images/books/*.jfif cover paths
-        Quote::updateOrCreate(
+            ],
             [
-                'user_id' => $arabicReader->id,
+                'publisher' => 'reading',
+                'type' => Quote::TYPE_QUICK,
+                'quote_text' => "إِنَّما الأُمَمُ الأَخلاقُ ما بَقِيَتْ\nفَإِنْ هُمُ ذَهَبَتْ أَخلاقُهُمْ ذَهَبوا",
+                'attributed_author' => 'أحمد شوقي',
+                'book_title' => null,
+                'book_cover_path' => null,
+            ],
+            [
+                'publisher' => 'wisdom',
+                'type' => Quote::TYPE_QUICK,
+                'quote_text' => "يُخاطِبُني السَّفيهُ بِكُلِّ قُبحٍ\nفَأَكرَهُ أَنْ أَكونَ لَهُ مُجيبًا\nيَزيدُ سَفاهَةً فَأَزيدُ حِلمًا\nكَعودٍ زادَهُ الإِحراقُ طيبًا",
+                'attributed_author' => 'الإمام الشافعي (منسوب إليه)',
+                'book_title' => null,
+                'book_cover_path' => null,
+            ],
+
+            // Book quotations — the credited speaker is stored in attributed_author.
+            [
+                'publisher' => 'knowledge',
                 'type' => Quote::TYPE_BOOK,
-                'quote_text' => 'إن الكلمات التي تخرج من القلب تدخل إلى القلب، وما يخرج من اللسان لا يتجاوز الآذان.',
-            ],
-            [
-                'book_title' => 'وحي القلم',
-                'attributed_author' => 'مصطفى صادق الرافعي',
-                'book_cover_path' => 'images/books/wahy-al-qalam.jfif',
-            ]
-        );
-
-        Quote::updateOrCreate(
-            [
-                'user_id' => $arabicReader->id,
-                'type' => Quote::TYPE_BOOK,
-                'quote_text' => 'اعلم رحمك الله أنه يجب علينا تعلم أربع مسائل: الأولى العلم، والثانية العمل به، والثالثة الدعوة إليه، والرابعة الصبر على الأذى فيه.',
-            ],
-            [
-                'book_title' => 'ثلاثة الأصول وأدلتها',
+                'quote_text' => 'اعْلَمْ رَحِمَكَ اللهُ أَنَّهُ يَجِبُ عَلَيْنَا تَعَلُّمُ أَرْبَعِ مَسَائِلَ: الْعِلْمُ، وَالْعَمَلُ بِهِ، وَالدَّعْوَةُ إِلَيْهِ، وَالصَّبْرُ عَلَى الْأَذَى فِيهِ.',
                 'attributed_author' => 'محمد بن عبد الوهاب',
+                'book_title' => 'ثلاثة الأصول وأدلتها',
                 'book_cover_path' => 'images/books/three-fundamental-principles.jfif',
-            ]
-        );
-
-        Quote::updateOrCreate(
-            [
-                'user_id' => $arabicReader->id,
-                'type' => Quote::TYPE_BOOK,
-                'quote_text' => 'إنما الأعمال بالنيات، وإنما لكل امرئ ما نوى.',
             ],
             [
-                'book_title' => 'صحيح البخاري',
-                'attributed_author' => 'الإمام محمد بن إسماعيل البخاري',
-                'book_cover_path' => 'images/books/sahih-al-bukhari.jfif',
-            ]
-        );
-
-        Quote::updateOrCreate(
-            [
-                'user_id' => $arabicReader->id,
+                'publisher' => 'reading',
                 'type' => Quote::TYPE_BOOK,
-                'quote_text' => 'الدين النصيحة، قلنا لمن؟ قال: لله ولكتابه ولرسوله ولأئمة المسلمين وعامتهم.',
+                'quote_text' => 'يَا رَبِّ إِنَّ ذُنُوبِي عَظِيمَةٌ، وَإِنَّ قَلِيلَ عَفْوِكَ أَعْظَمُ مِنْهَا، اللَّهُمَّ فَامْحُ بِقَلِيلِ عَفْوِكَ عَظِيمَ ذُنُوبِي.',
+                'attributed_author' => 'عبد الملك بن مروان',
+                'book_title' => 'البداية والنهاية',
+                'book_cover_path' => 'images/books/al-bidaya-wa-al-nihaya.jfif',
             ],
             [
-                'book_title' => 'صحيح مسلم',
-                'attributed_author' => 'الإمام مسلم بن الحجاج',
-                'book_cover_path' => 'images/books/sahih-muslim.jfif',
-            ]
-        );
-
-        // Backfill any existing book quotes matching the 4 seeded book titles that still have a null cover path
-        $titleCoverMap = [
-            'وحي القلم' => 'images/books/wahy-al-qalam.jfif',
-            'ثلاثة الأصول وأدلتها' => 'images/books/three-fundamental-principles.jfif',
-            'الأصول الثلاثة' => 'images/books/three-fundamental-principles.jfif',
-            'Three Fundamental Principles' => 'images/books/three-fundamental-principles.jfif',
-            'صحيح البخاري' => 'images/books/sahih-al-bukhari.jfif',
-            'Sahih al-Bukhari' => 'images/books/sahih-al-bukhari.jfif',
-            'صحيح مسلم' => 'images/books/sahih-muslim.jfif',
-            'Sahih Muslim' => 'images/books/sahih-muslim.jfif',
+                'publisher' => 'ink',
+                'type' => Quote::TYPE_BOOK,
+                'quote_text' => 'لَا فَوْزَ إِلَّا فِي طَاعَتِهِ، وَلَا عِزَّ إِلَّا فِي التَّذَلُّلِ لِعَظَمَتِهِ، وَلَا غِنَى إِلَّا فِي الِافْتِقَارِ إِلَى رَحْمَتِهِ.',
+                'attributed_author' => 'ابن قيم الجوزية',
+                'book_title' => 'زاد المعاد في هدي خير العباد',
+                'book_cover_path' => 'images/books/zad-al-maad.jfif',
+            ],
+            [
+                'publisher' => 'wisdom',
+                'type' => Quote::TYPE_BOOK,
+                'quote_text' => 'كل انطفأ حلم خلق الله لك حلما أجمل... وكلما بهتت في قلبك ذكرى صنع الله لك ذكرى أروع!',
+                'attributed_author' => 'علي بن جابر الفيفي',
+                'book_title' => 'لأنك الله: رحلة إلى السماء السابعة',
+                'book_cover_path' => 'images/books/lanak-allah.jpg',
+            ],
         ];
 
-        foreach ($titleCoverMap as $title => $coverPath) {
-            Quote::query()
-                ->where('type', Quote::TYPE_BOOK)
-                ->where('book_title', $title)
-                ->where(function ($q) {
-                    $q->whereNull('book_cover_path')->orWhere('book_cover_path', '');
-                })
-                ->update(['book_cover_path' => $coverPath]);
-        }
+        foreach ($quotes as $quoteData) {
+            $publisher = $users[$quoteData['publisher']];
 
-        Quote::query()->get()->each->syncCatalogRelations();
+            $quote = Quote::updateOrCreate(
+                [
+                    'user_id' => $publisher->id,
+                    'type' => $quoteData['type'],
+                    'quote_text' => $quoteData['quote_text'],
+                ],
+                [
+                    'attributed_author' => $quoteData['attributed_author'],
+                    'book_title' => $quoteData['book_title'],
+                    'book_cover_path' => $quoteData['book_cover_path'],
+                ]
+            );
+
+            // Keep the normalized authors/books catalog in sync with the legacy quote fields.
+            $quote->syncCatalogRelations();
+        }
     }
 }
