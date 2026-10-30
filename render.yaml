@@ -1,0 +1,58 @@
+services:
+  - type: web
+    name: athar
+    runtime: docker
+    plan: free
+    autoDeploy: true
+    healthCheckPath: /health
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    envVars:
+      - key: APP_NAME
+        value: ATHAR
+      - key: BRAND_NAME_AR
+        value: "أَثَر"
+      - key: BRAND_NAME_EN
+        value: ATHAR
+      - key: APP_ENV
+        value: production
+      - key: APP_DEBUG
+        value: "false"
+      - key: APP_TIMEZONE
+        value: Asia/Riyadh
+      - key: APP_LOCALE
+        value: ar
+      - key: APP_FALLBACK_LOCALE
+        value: ar
+      - key: LOG_CHANNEL
+        value: stderr
+      - key: LOG_LEVEL
+        value: warning
+      - key: DB_CONNECTION
+        value: pgsql
+      - key: DB_SSLMODE
+        value: require
+      - key: DB_PERSISTENT
+        value: "false"
+      - key: SESSION_DRIVER
+        value: cookie
+      - key: SESSION_LIFETIME
+        value: "120"
+      - key: SESSION_ENCRYPT
+        value: "true"
+      - key: SESSION_SECURE_COOKIE
+        value: "true"
+      - key: SESSION_HTTP_ONLY
+        value: "true"
+      - key: SESSION_SAME_SITE
+        value: lax
+      - key: CACHE_STORE
+        value: file
+      - key: QUEUE_CONNECTION
+        value: sync
+      - key: FILESYSTEM_DISK
+        value: public
+      - key: APP_KEY
+        sync: false
+      - key: DATABASE_URL
+        sync: false

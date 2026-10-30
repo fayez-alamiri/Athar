@@ -1,0 +1,221 @@
+@import 'tailwindcss';
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+@source '../views/**/*.blade.php';
+@source '../js/**/*.js';
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+/*
+|--------------------------------------------------------------------------
+| Warm Literary Editorial — Design Tokens (Light & Dark Modes)
+|--------------------------------------------------------------------------
+*/
+
+:root,
+html:not(.dark) {
+    --bg-main: #F8F4EC;
+    --bg-card: #FFFEFA;
+    --bg-secondary: #EFE5D5;
+    --bg-elevated: #F5EFE4;
+    --text-primary: #2B1D17;
+    --text-heading: #2B1D17;
+    --text-secondary: #827469;
+    --brand-primary: #4A3328;
+    --brand-primary-hover: #3B281F;
+    --brand-contrast: #FFFEFA;
+    --accent-gold: #B99A68;
+    --accent-gold-soft: rgba(185, 154, 104, 0.16);
+    --border-subtle: #E4D9C8;
+    --border-strong: #D2C2AC;
+    --shadow-card: 0 6px 24px -6px rgba(43, 29, 23, 0.06), 0 2px 6px -1px rgba(43, 29, 23, 0.04);
+    color-scheme: light;
+}
+
+html.dark {
+    --bg-main: #211A16;
+    --bg-card: #2C231D;
+    --bg-secondary: #362B24;
+    --bg-elevated: #261E19;
+    --text-primary: #F2E8DA;
+    --text-heading: #F2E8DA;
+    --text-secondary: #C3B4A0;
+    --brand-primary: #C9A66B;
+    --brand-primary-hover: #D6B782;
+    --brand-contrast: #211A16;
+    --accent-gold: #C9A66B;
+    --accent-gold-soft: rgba(201, 166, 107, 0.18);
+    --border-subtle: #41342C;
+    --border-strong: #56453B;
+    --shadow-card: 0 8px 28px -6px rgba(0, 0, 0, 0.35), 0 2px 8px -2px rgba(0, 0, 0, 0.25);
+    color-scheme: dark;
+}
+
+/* Strictly tie Sun/Moon icon visibility to html.dark */
+html:not(.dark) [data-theme-icon="sun"] {
+    display: block !important;
+}
+
+html:not(.dark) [data-theme-icon="moon"] {
+    display: none !important;
+}
+
+html.dark [data-theme-icon="sun"] {
+    display: none !important;
+}
+
+html.dark [data-theme-icon="moon"] {
+    display: block !important;
+}
+
+@theme {
+    --font-sans: 'Tajawal', 'Inter', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --font-serif: 'Lora', 'Tajawal', Georgia, Cambria, 'Times New Roman', Times, serif;
+    --font-arabic: 'Tajawal', ui-sans-serif, system-ui, sans-serif;
+
+    --color-ivory: #F8F4EC;
+    --color-paper: #FFFEFA;
+    --color-beige: #EFE5D5;
+    --color-cocoa: #4A3328;
+    --color-espresso: #2B1D17;
+    --color-gold: #B99A68;
+    --color-warmgray: #827469;
+
+    --color-dark-bg: #211A16;
+    --color-dark-card: #2C231D;
+    --color-dark-text: #F2E8DA;
+    --color-dark-muted: #C3B4A0;
+    --color-dark-gold: #C9A66B;
+}
+
+@layer base {
+    html {
+        background-color: var(--bg-main);
+        color: var(--text-primary);
+    }
+
+    html[dir="rtl"] body {
+        font-family: 'Tajawal', ui-sans-serif, system-ui, -apple-system, sans-serif;
+    }
+
+    html[dir="ltr"] body {
+        font-family: 'Inter', 'Tajawal', ui-sans-serif, system-ui, -apple-system, sans-serif;
+    }
+
+    body {
+        background-color: var(--bg-main);
+        color: var(--text-primary);
+        min-height: 100vh;
+        transition: background-color 0.2s ease, color 0.2s ease;
+    }
+
+    h1, h2, h3, h4, .font-editorial {
+        color: var(--text-heading);
+    }
+
+    html[dir="ltr"] .font-editorial {
+        font-family: 'Lora', Georgia, serif;
+    }
+
+    html[dir="rtl"] .font-editorial {
+        font-family: 'Tajawal', sans-serif;
+    }
+}
+
+/* Semantic utility classes backed by theme tokens */
+.bg-editorial-main {
+    background-color: var(--bg-main) !important;
+}
+
+.bg-editorial-card {
+    background-color: var(--bg-card) !important;
+}
+
+.bg-editorial-secondary {
+    background-color: var(--bg-secondary) !important;
+}
+
+.text-editorial-primary {
+    color: var(--text-primary) !important;
+}
+
+.text-editorial-heading {
+    color: var(--text-heading) !important;
+}
+
+.text-editorial-secondary {
+    color: var(--text-secondary) !important;
+}
+
+.text-editorial-accent {
+    color: var(--accent-gold) !important;
+}
+
+.border-editorial {
+    border-color: var(--border-subtle) !important;
+}
+
+.border-editorial-strong {
+    border-color: var(--border-strong) !important;
+}
+
+.editorial-card {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    box-shadow: var(--shadow-card);
+    border-radius: 1rem;
+    transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.editorial-card:hover {
+    border-color: var(--border-strong);
+}
+
+.btn-editorial-primary,
+.theme-brand-pill {
+    background-color: var(--brand-primary) !important;
+    color: var(--brand-contrast) !important;
+    border: 1px solid transparent;
+    transition: background-color 0.15s ease, transform 0.15s ease;
+}
+
+.btn-editorial-primary:hover {
+    background-color: var(--brand-primary-hover) !important;
+}
+
+.btn-editorial-secondary {
+    background-color: var(--bg-secondary) !important;
+    color: var(--text-primary) !important;
+    border: 1px solid var(--border-subtle) !important;
+    transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.btn-editorial-secondary:hover {
+    border-color: var(--accent-gold) !important;
+}
+
+.input-editorial {
+    background-color: var(--bg-card) !important;
+    color: var(--text-primary) !important;
+    border: 1px solid var(--border-strong) !important;
+}
+
+.input-editorial::placeholder {
+    color: var(--text-secondary) !important;
+}
+
+.input-editorial:focus {
+    outline: none;
+    border-color: var(--accent-gold) !important;
+    box-shadow: 0 0 0 3px var(--accent-gold-soft);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
